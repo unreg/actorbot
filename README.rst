@@ -12,7 +12,18 @@ Features
 * pure Python with asyncio and aiohttp
 * websocket connection to Actor ws|wss API-endpoint
 * sending and receiving text messages
+* API module
 * `LICENSE <https://github.com/unreg/actorbot/blob/master/LICENSE.txt>`_
+
+API modules
+===========
+
+- [x] send text
+- [ ] find user
+- [ ] get user
+- [ ] get group
+- [ ] create group
+
 
 Requirements
 ============
