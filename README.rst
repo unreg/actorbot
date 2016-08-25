@@ -10,7 +10,7 @@ Features
 
 * simple, small and extensible. It's easy to write own `Actor Messaging <https://github.com/actorapp>`_ bots.
 * pure Python with asyncio and aiohttp
-* websocket connection to Actor ws|wss endpoint
+* websocket connection to Actor ws|wss API-endpoint
 * sending and receiving text messages
 * `LICENSE <https://github.com/unreg/actorbot/blob/master/LICENSE.txt>`_
 
