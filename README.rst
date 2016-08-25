@@ -12,13 +12,13 @@ Features
 * pure Python with asyncio and aiohttp
 * websocket connection to Actor ws|wss endpoint
 * sending and receiving text messages
-* `LICENSE <https://github.com/unreg/actorbot/LICENSE.txt>`_
+* `LICENSE <https://github.com/unreg/actorbot/blob/master/LICENSE.txt>`_
 
 Requirements
 ============
 
 * Python >= 3.5.1
-* `aiohttp >= <https://github.com/KeepSafe/aiohttp>`_
+* `aiohttp >= 0.22.0<https://github.com/KeepSafe/aiohttp>`_
 
 
 Getting started
