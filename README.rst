@@ -18,7 +18,7 @@ Requirements
 ============
 
 * Python >= 3.5.1
-* `aiohttp >= 0.22.0<https://github.com/KeepSafe/aiohttp>`_
+* `aiohttp >= 0.22.0 <https://github.com/KeepSafe/aiohttp>`_
 
 
 Getting started
