@@ -15,8 +15,8 @@ Features
 * API module
 * `LICENSE <https://github.com/unreg/actorbot/blob/master/LICENSE.txt>`_
 
-API modules
-===========
+API module
+==========
 
 - [x] send text
 - [ ] find user
