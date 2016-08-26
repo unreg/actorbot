@@ -41,7 +41,6 @@ Getting started
     import asyncio
 
     from actorbot import ActorBot, BotFarm
-    from actorbot.utils import OutgoingMessage
 
 
     class EchoBot(ActorBot):
