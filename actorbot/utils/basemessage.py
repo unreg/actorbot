@@ -19,19 +19,8 @@
 #THE SOFTWARE.
 
 import json
-import datetime
-import random
 
 from actorbot.utils import logger
-
-
-def random_id(mid):
-    """
-    """
-    return ''.join([
-        datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
-        '%03d' % int(mid),
-        '%02d' % random.randint(0, 100)])
 
 
 class BaseMessage(object):
@@ -76,35 +65,3 @@ class BaseMessage(object):
         """
         """
         return json.dumps(self._data)
-
-
-class OutgoingMessage(BaseMessage):
-
-    """
-    """
-
-    def __init__(self, mtype='Request', mid='', service='messaging',
-                 body_type='SendMessage',
-                 peer_type='', peer_accessHash='', peer_id=0,
-                 message_type='Text', message_text=''):
-        """
-        """
-        data = {
-            '$type': mtype,
-            'id': str(mid),
-            'service': service,
-            'body': {
-                '$type': body_type,
-                'peer': {
-                    '$type': peer_type,
-                    'accessHash': peer_accessHash,
-                    'id': peer_id
-                },
-                'randomId': random_id(mid),
-                'message': {
-                    '$type': message_type,
-                    'text': message_text
-                }
-            }
-        }
-        super().__init__(data)

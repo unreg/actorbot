@@ -22,8 +22,21 @@
 import asyncio
 import aiohttp
 import json
+import datetime
+import random
+from jinja2 import FileSystemLoader
+from jinja2.environment import Environment
 
 from actorbot.utils import logger, BaseMessage
+
+
+def random_id(id):
+    """
+    """
+    return ''.join([
+        datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
+        '%03d' % int(id),
+        '%02d' % random.randint(0, 100)])
 
 
 class ActorBot(object):
@@ -39,12 +52,20 @@ class ActorBot(object):
         self._session = aiohttp.ClientSession()
         self._keep_alive = keep_alive
         self._ws = None
-        self._id = 1
+        self._id = 0
+        self._env = Environment()
+        self._env.loader = FileSystemLoader('./actorbot/templates')
 
     def handler(self, message):
         """
         """
         pass
+
+    def _get_id(self):
+        """
+        """
+        self._id += 1
+        return self._id
 
     async def _connect(self):
         """
@@ -52,12 +73,25 @@ class ActorBot(object):
         logger.debug('[%s] connect to %s', self._name, self._url)
         return await self._session.ws_connect(self._url)
 
-    def send(self, message):
+    def sendMessage(self, id, peer_type, peer_id, accessHash, text):
         """
         """
-        logger.debug('[%s] send: %s', self._name, message.to_str())
-        self._ws.send_str(message.to_str())
-        self._id += 1
+        data = {
+            'type': 'Request',
+            'id': id,
+            'service': 'messaging',
+            'body_type': 'SendMessage',
+            'peer_type': peer_type,
+            'peer_id': peer_id,
+            'accessHash': accessHash,
+            'randomId': random_id(id),
+            'message_type': 'Text',
+            'message_text': text
+        }
+        template = self._env.get_template('sendmessage')
+        text = template.render(data)
+        res = ''.join([s.strip() for s in text.split()])
+        self._ws.send_str(res)
 
     async def receive(self):
         """

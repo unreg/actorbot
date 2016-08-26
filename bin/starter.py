@@ -26,8 +26,6 @@ import signal
 import logging
 
 from actorbot.utils import logger_init, logger
-from actorbot.utils import OutgoingMessage
-
 from actorbot import ActorBot, BotFarm
 
 
@@ -36,20 +34,18 @@ class EchoBot(ActorBot):
     """
     """
 
-    def handler(self, msg):
+    def handler(self, message):
         """
         """
         logger.info('[%s] receive message from ID=%s',
-                    self._name, msg.body.sender.id)
-
-        out = OutgoingMessage(mid=self._id,
-                              peer_type=msg.body.peer.type,
-                              peer_accessHash=msg.body.peer.accessHash,
-                              peer_id = msg.body.peer.id,
-                              message_text = msg.body.message.text)
-        self.send(out)
+                    self._name, message.body.sender.id)
+        self.sendMessage(id=self._get_id(),
+                         peer_type=message.body.peer.type,
+                         peer_id=message.body.peer.id,
+                         accessHash=message.body.peer.accessHash,
+                         text=message.body.message.text)
         logger.info('[%s] send message to ID=%s',
-                    self._name, msg.body.sender.id)
+                    self._name, message.body.sender.id)
 
 
 async def exit(signame):
@@ -60,7 +56,7 @@ async def exit(signame):
 
 
 if __name__ == '__main__':
-    logger_init(stream_log_level=logging.INFO)
+    logger_init(stream_log_level=logging.DEBUG)
 
     echobot = EchoBot(endpoint='ENDPOINT_HERE',
                       token='BOT_TOKEN_HERE',

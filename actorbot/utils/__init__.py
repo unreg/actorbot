@@ -22,5 +22,4 @@ def safe_import(module_name, class_name):
 safe_import('.logger', 'logger')
 safe_import('.logger', 'logger_init')
 safe_import('.basemessage', 'BaseMessage')
-safe_import('.basemessage', 'OutgoingMessage')
 safe_import('.event', 'Event')

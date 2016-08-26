@@ -30,6 +30,7 @@ Requirements
 
 * Python >= 3.5.1
 * `aiohttp >= 0.22.0 <https://github.com/KeepSafe/aiohttp>`_
+* jinja2
 
 
 Getting started
@@ -47,12 +48,11 @@ Getting started
 
         # override base handler for your bot logic
         def handler(self, message):
-            out = OutgoingMessage(mid=self._id,
-                                  peer_type=message.body.peer.type,
-                                  peer_accessHash=message.body.peer.accessHash,
-                                  peer_id = message.body.peer.id,
-                                  message_text = message.body.message.text)
-            self.send(out)
+            self.sendMessage(id=self._get_id(),
+                             peer_type=message.body.peer.type,
+                             peer_id=message.body.peer.id,
+                             accessHash=message.body.peer.accessHash,
+                             text=message.body.message.text)
 
 
     bot = EchoBot(endpoint='ENDPOINT',
