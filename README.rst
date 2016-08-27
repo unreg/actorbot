@@ -47,12 +47,17 @@ Getting started
 
         # override base handler for your bot logic
         def handler(self, message):
-            self.sendMessage(id=self._get_id(),
-                             peer_type=message.body.peer.type,
-                             peer_id=message.body.peer.id,
-                             accessHash=message.body.peer.accessHash,
-                             text=message.body.message.text)
+            # set destination peer a sender
+            dest = message.body.peer
 
+            # create echo text message
+            out_text = TextMessage(text=message.body.message.text)
+
+            # make sendmessage object
+            out_msg = SendMessage(self._get_id(), peer=dest, message=out_text)
+
+            # send message
+            self.send(out_msg)
 
     bot = EchoBot(endpoint='ENDPOINT',
                   token='TOKEN',

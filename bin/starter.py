@@ -26,6 +26,7 @@ import signal
 import logging
 
 from actorbot.utils import logger_init, logger
+from actorbot.utils import TextMessage, SendMessage
 from actorbot import ActorBot, BotFarm
 
 
@@ -39,11 +40,19 @@ class EchoBot(ActorBot):
         """
         logger.info('[%s] receive message from ID=%s',
                     self._name, message.body.sender.id)
-        self.sendMessage(id=self._get_id(),
-                         peer_type=message.body.peer.type,
-                         peer_id=message.body.peer.id,
-                         accessHash=message.body.peer.accessHash,
-                         text=message.body.message.text)
+
+        # set destination peer a sender
+        dest = message.body.peer
+
+        # create echo text message
+        out_text = TextMessage(text=message.body.message.text)
+
+        # make sendmessage object
+        out_msg = SendMessage(self._get_id(), peer=dest, message=out_text)
+
+        # send message
+        self.send(out_msg)
+
         logger.info('[%s] send message to ID=%s',
                     self._name, message.body.sender.id)
 
@@ -58,9 +67,9 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    echobot = EchoBot(endpoint='ENDPOINT_HERE',
-                      token='BOT_TOKEN_HERE',
-                      name='BOT_NAME_HERE')
+    bot = EchoBot(endpoint='ENDPOINT',
+                  token='TOKEN',
+                  name='BOT_NAME')
     farm = BotFarm([echobot])
 
     loop = asyncio.get_event_loop()

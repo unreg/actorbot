@@ -22,21 +22,8 @@
 import asyncio
 import aiohttp
 import json
-import datetime
-import random
-from jinja2 import FileSystemLoader
-from jinja2.environment import Environment
 
 from actorbot.utils import logger, BaseMessage
-
-
-def random_id(id):
-    """
-    """
-    return ''.join([
-        datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
-        '%03d' % int(id),
-        '%02d' % random.randint(0, 100)])
 
 
 class ActorBot(object):
@@ -53,8 +40,8 @@ class ActorBot(object):
         self._keep_alive = keep_alive
         self._ws = None
         self._id = 0
-        self._env = Environment()
-        self._env.loader = FileSystemLoader('./actorbot/templates')
+        #self._env = Environment()
+        #self._env.loader = FileSystemLoader('./actorbot/templates')
 
     def handler(self, message):
         """
@@ -91,7 +78,15 @@ class ActorBot(object):
         template = self._env.get_template('sendmessage')
         text = template.render(data)
         res = ''.join([s.strip() for s in text.split()])
+        logger.debug('send: %s', res)
         self._ws.send_str(res)
+
+    def send(self, message):
+        """
+        """
+        text = message.to_str().replace('"type"', '"$type"')
+        logger.debug('send: %s', text)
+        self._ws.send_str(text)
 
     async def receive(self):
         """
