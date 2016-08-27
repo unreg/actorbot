@@ -26,7 +26,8 @@ import json
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
 
-from actorbot.utils import logger, BaseMessage
+from actorbot.utils import logger
+from actorbot.api import BaseMessage
 
 
 class ActorBot(object):

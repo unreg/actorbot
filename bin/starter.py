@@ -26,8 +26,12 @@ import signal
 import logging
 
 from actorbot.utils import logger_init, logger
-from actorbot.utils import TextMessage, SendMessage
+
+from actorbot.api import messaging
+
 from actorbot import ActorBot, BotFarm
+
+
 
 
 class EchoBot(ActorBot):
@@ -45,10 +49,10 @@ class EchoBot(ActorBot):
         dest = message.body.peer
 
         # create echo text message
-        out_text = TextMessage(text=message.body.message.text)
+        out_text = messaging.TextMessage(text=message.body.message.text)
 
         # make sendmessage object
-        out_msg = SendMessage(self._get_id(), peer=dest, message=out_text)
+        out_msg = messaging.SendMessage(self._get_id(), peer=dest, message=out_text)
 
         # send message
         self.send(out_msg)
