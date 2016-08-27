@@ -32,8 +32,6 @@ from actorbot.api import messaging
 from actorbot import ActorBot, BotFarm
 
 
-
-
 class EchoBot(ActorBot):
 
     """
