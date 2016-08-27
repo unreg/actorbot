@@ -28,6 +28,17 @@ API module
 
   - [x] InviteUser
 
+- [x] KeyValue
+
+  - [x] SetVAlue
+
+  - [x] GetValue
+
+  - [x] DeleteValue
+
+  - [x] GetKeys
+
+
   more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
 
 
