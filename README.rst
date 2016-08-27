@@ -18,11 +18,11 @@ Features
 API module
 ==========
 
-- [x] send text
-- [ ] find user
-- [ ] get user
-- [ ] get group
-- [ ] create group
+- [x] messaging
+ - [x] SendMessage
+- [x] Group
+ - [x] Creategroup
+ - [x] InviteUser
 
 
 Requirements
@@ -40,6 +40,7 @@ Getting started
 
     import asyncio
 
+    from actorbot.api import messaging
     from actorbot import ActorBot, BotFarm
 
 
@@ -51,10 +52,10 @@ Getting started
             dest = message.body.peer
 
             # create echo text message
-            out_text = TextMessage(text=message.body.message.text)
+            out_text = messaging.TextMessage(text=message.body.message.text)
 
             # make sendmessage object
-            out_msg = SendMessage(self._get_id(), peer=dest, message=out_text)
+            out_msg = messaging.SendMessage(self._get_id(), peer=dest, message=out_text)
 
             # send message
             self.send(out_msg)

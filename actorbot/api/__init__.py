@@ -19,6 +19,9 @@ def safe_import(module_name, class_name):
         logger.debug("%s", traceback.format_exc())
 
 
-safe_import('.logger', 'logger')
-safe_import('.logger', 'logger_init')
-safe_import('.event', 'Event')
+safe_import('.basemessage', 'Services')
+safe_import('.basemessage', 'BaseMessage')
+safe_import('.basemessage', 'MessageOut')
+safe_import('.basemessage', 'Body')
+safe_import('.basemessage', 'Peer')
+safe_import('.basemessage', 'random_id')

@@ -20,7 +20,7 @@
 
 import asyncio
 
-from actorbot.utils import logger, BaseMessage
+from actorbot.utils import logger
 
 
 class Event(object):
