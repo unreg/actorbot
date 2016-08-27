@@ -19,9 +19,13 @@ API module
 ==========
 
 - [x] messaging
+
  - [x] SendMessage
+
 - [x] Group
+
  - [x] Creategroup
+ 
  - [x] InviteUser
 
 
