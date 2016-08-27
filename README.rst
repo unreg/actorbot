@@ -24,7 +24,7 @@ API module
 
 - [x] Groups
 
-  - [x] Creategroup
+  - [x] CreateGroup
 
   - [x] InviteUser
 
