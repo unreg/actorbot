@@ -23,7 +23,7 @@ import datetime
 import random
 from enum import Enum
 
-# from actorbot.utils import logger
+from actorbot.utils import logger
 
 
 def random_id(id):
@@ -137,9 +137,3 @@ class SendMessage(MessageOut):
                     randomId=random_id(message_id),
                     peer=peer, message=message)
         super().__init__(message_id, Services.Messaging, body)
-
-
-
-if __name__ == '__main__':
-    m = SendMessage(1, 'peer', 'text')
-    print(m.to_str())

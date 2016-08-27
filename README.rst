@@ -67,7 +67,7 @@ Getting started
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([farm.run()]))
 
-or send any message as a template:
+or send any message as a jinja2 template:
 
 .. code-block:: python
 
