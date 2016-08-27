@@ -18,15 +18,17 @@ Features
 API module
 ==========
 
-- [x] messaging
+- [x] Messaging
 
   - [x] SendMessage
 
-- [x] Group
+- [x] Groups
 
   - [x] Creategroup
 
   - [x] InviteUser
+
+  more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
 
 
 Requirements
