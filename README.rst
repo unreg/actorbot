@@ -76,22 +76,22 @@ or send any message as a template:
         # override base handler for your bot logic
         def handler(self, message):
             data = {
-            'type': 'Request',
-            'id': self._get_id(),
-            'service': 'messaging',
-            'body_type': 'SendMessage',
-            'peer_type': message.body.peer.type,
-            'peer_id': message.body.peer.id,
-            'accessHash': message.body.peer.accessHash,
-            'randomId': '2016082714190733169', # random id
-            'message_type': 'Text',
-            'message_text': message.body.message.text
-        }
-        self.sendTemplate(data, 'sendmessage')
+                'type': 'Request',
+                'id': self._get_id(),
+                'service': 'messaging',
+                'body_type': 'SendMessage',
+                'peer_type': message.body.peer.type,
+                'peer_id': message.body.peer.id,
+                'accessHash': message.body.peer.accessHash,
+                'randomdomId': '2016082714190733169', # random id
+                'message_type': 'Text',
+                'message_text': message.body.message.text
+            }
+            self.sendTemplate(data, 'sendmessage')
 
-template _./actorbot/templates/sendmessage_:
+template *./actorbot/templates/sendmessage_*:
 
-.. code-block:: json
+.. code-block:: template
 
     {
         "$type":"{{ type }}",
