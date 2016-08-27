@@ -23,6 +23,9 @@ import asyncio
 import aiohttp
 import json
 
+from jinja2 import FileSystemLoader
+from jinja2.environment import Environment
+
 from actorbot.utils import logger, BaseMessage
 
 
@@ -40,8 +43,8 @@ class ActorBot(object):
         self._keep_alive = keep_alive
         self._ws = None
         self._id = 0
-        #self._env = Environment()
-        #self._env.loader = FileSystemLoader('./actorbot/templates')
+        self._env = Environment()
+        self._env.loader = FileSystemLoader('./actorbot/templates')
 
     def handler(self, message):
         """
@@ -60,22 +63,10 @@ class ActorBot(object):
         logger.debug('[%s] connect to %s', self._name, self._url)
         return await self._session.ws_connect(self._url)
 
-    def sendMessage(self, id, peer_type, peer_id, accessHash, text):
+    def sendTemplate(self, data, template_name):
         """
         """
-        data = {
-            'type': 'Request',
-            'id': id,
-            'service': 'messaging',
-            'body_type': 'SendMessage',
-            'peer_type': peer_type,
-            'peer_id': peer_id,
-            'accessHash': accessHash,
-            'randomId': random_id(id),
-            'message_type': 'Text',
-            'message_text': text
-        }
-        template = self._env.get_template('sendmessage')
+        template = self._env.get_template(template_name)
         text = template.render(data)
         res = ''.join([s.strip() for s in text.split()])
         logger.debug('send: %s', res)
