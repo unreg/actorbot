@@ -22,6 +22,8 @@ API module
 
   - [x] SendMessage
 
+  - [ ] UpdateMessage
+
 - [x] Groups
 
   - [x] CreateGroup
