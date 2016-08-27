@@ -20,13 +20,13 @@ API module
 
 - [x] messaging
 
- - [x] SendMessage
+  - [x] SendMessage
 
 - [x] Group
 
- - [x] Creategroup
- 
- - [x] InviteUser
+  - [x] Creategroup
+
+  - [x] InviteUser
 
 
 Requirements
