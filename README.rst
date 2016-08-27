@@ -47,12 +47,17 @@ Getting started
 
         # override base handler for your bot logic
         def handler(self, message):
-            self.sendMessage(id=self._get_id(),
-                             peer_type=message.body.peer.type,
-                             peer_id=message.body.peer.id,
-                             accessHash=message.body.peer.accessHash,
-                             text=message.body.message.text)
+            # set destination peer a sender
+            dest = message.body.peer
 
+            # create echo text message
+            out_text = TextMessage(text=message.body.message.text)
+
+            # make sendmessage object
+            out_msg = SendMessage(self._get_id(), peer=dest, message=out_text)
+
+            # send message
+            self.send(out_msg)
 
     bot = EchoBot(endpoint='ENDPOINT',
                   token='TOKEN',
@@ -62,3 +67,47 @@ Getting started
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([farm.run()]))
 
+or send any message as a jinja2 template:
+
+.. code-block:: python
+
+    class EchoBot(ActorBot):
+
+        # override base handler for your bot logic
+        def handler(self, message):
+            data = {
+                'type': 'Request',
+                'id': self._get_id(),
+                'service': 'messaging',
+                'body_type': 'SendMessage',
+                'peer_type': message.body.peer.type,
+                'peer_id': message.body.peer.id,
+                'accessHash': message.body.peer.accessHash,
+                'randomdomId': '2016082714190733169', # random id
+                'message_type': 'Text',
+                'message_text': message.body.message.text
+            }
+            self.sendTemplate(data, 'sendmessage')
+
+template *./actorbot/templates/sendmessage*:
+
+.. code-block:: template
+
+    {
+        "$type":"{{ type }}",
+        "id":"{{ id }}",
+        "service":"{{ service }}",
+        "body":{
+            "$type":"{{ body_type }}",
+            "peer":{
+                "$type":"{{ peer_type }}",
+                "id":{{ peer_id }},
+                "accessHash":"{{ accessHash }}"
+            },
+            "randomId":"{{ randomId }}",
+            "message":{
+                "$type":"{{ message_type }}",
+                "text":"{{ message_text }}"
+            }
+        }
+    }
