@@ -89,7 +89,7 @@ or send any message as a template:
             }
             self.sendTemplate(data, 'sendmessage')
 
-template *./actorbot/templates/sendmessage_*:
+template *./actorbot/templates/sendmessage*:
 
 .. code-block:: template
 
