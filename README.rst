@@ -77,9 +77,9 @@ Getting started
             # send message
             self.send(out_msg)
 
-    bot = EchoBot(endpoint='ENDPOINT',
-                  token='TOKEN',
-                  name='BOT_NAME')
+    echobot = EchoBot(endpoint='ENDPOINT',
+                      token='TOKEN',
+                      name='BOT_NAME')
     farm = BotFarm([echobot])
 
     loop = asyncio.get_event_loop()
