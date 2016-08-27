@@ -32,8 +32,6 @@ from actorbot.api import messaging
 from actorbot import ActorBot, BotFarm
 
 
-
-
 class EchoBot(ActorBot):
 
     """
@@ -71,7 +69,7 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    bot = EchoBot(endpoint='ENDPOINT',
+    echobot = EchoBot(endpoint='ENDPOINT',
                   token='TOKEN',
                   name='BOT_NAME')
     farm = BotFarm([echobot])
