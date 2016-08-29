@@ -64,7 +64,7 @@ Getting started
     class EchoBot(ActorBot):
 
         # override base handler for your bot logic
-        def handler(self, message):
+        def incomming_handler(self, message):
             # set destination peer a sender
             dest = message.body.peer
 
