@@ -22,11 +22,7 @@ API module
 
   - [x] SendMessage
 
-<<<<<<< HEAD
-  - [ ] UpdateMessage
-=======
   - [x] UpdateMessageContent
->>>>>>> develop
 
 - [x] Groups
 
