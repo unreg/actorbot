@@ -27,7 +27,7 @@ import logging
 
 from actorbot.utils import logger_init, logger
 
-from actorbot.api import messaging, keyvalue, groups, Peer
+from actorbot.api import messaging, Peer
 
 from actorbot import ActorBot, BotFarm
 
@@ -66,9 +66,9 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    echobot = EchoBot(endpoint='ws://ws-api-actor.tmnhy.su:84',
-                      token='8548b6db3eb50c5e2a8e4fc2e6cd5342e55662ae',
-                      name='OneNe')
+    echobot = EchoBot(endpoint='ENDPOINT',
+                      token='TOKEN',
+                      name='BOT_NAME')
     farm = BotFarm([echobot])
 
     loop = asyncio.get_event_loop()
