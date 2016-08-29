@@ -19,3 +19,12 @@ class SendMessage(MessageOut):
                     randomId=random_id(message_id),
                     peer=peer, message=message)
         super().__init__(message_id, Services.Messaging, body)
+
+
+class UpdateMessageContent(MessageOut):
+    def __init__(self, message_id, peer, randomId, message):
+        body = Body(body_type='UpdateMessageContent',
+                    randomId=randomId,
+                    peer=peer, updatedMessage=message)
+        super().__init__(message_id, Services.Messaging, body)
+

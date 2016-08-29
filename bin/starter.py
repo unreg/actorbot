@@ -27,7 +27,7 @@ import logging
 
 from actorbot.utils import logger_init, logger
 
-from actorbot.api import messaging
+from actorbot.api import messaging, keyvalue, groups, Peer
 
 from actorbot import ActorBot, BotFarm
 
@@ -37,11 +37,10 @@ class EchoBot(ActorBot):
     """
     """
 
-    def handler(self, message):
+    async def incomming_handler(self, message):
         """
         """
-        logger.info('[%s] receive message from ID=%s',
-                    self._name, message.body.sender.id)
+        await super().incomming_handler(message)
 
         # set destination peer a sender
         dest = message.body.peer
@@ -50,13 +49,11 @@ class EchoBot(ActorBot):
         out_text = messaging.TextMessage(text=message.body.message.text)
 
         # make sendmessage object
-        out_msg = messaging.SendMessage(self._get_id(), peer=dest, message=out_text)
+        out_msg = messaging.SendMessage(self._get_id(),
+                                        peer=dest, message=out_text)
 
         # send message
-        self.send(out_msg)
-
-        logger.info('[%s] send message to ID=%s',
-                    self._name, message.body.sender.id)
+        await self.send(out_msg)
 
 
 async def exit(signame):
@@ -69,9 +66,9 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    echobot = EchoBot(endpoint='ENDPOINT',
-                  token='TOKEN',
-                  name='BOT_NAME')
+    echobot = EchoBot(endpoint='ws://ws-api-actor.tmnhy.su:84',
+                      token='8548b6db3eb50c5e2a8e4fc2e6cd5342e55662ae',
+                      name='OneNe')
     farm = BotFarm([echobot])
 
     loop = asyncio.get_event_loop()

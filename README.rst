@@ -22,6 +22,8 @@ API module
 
   - [x] SendMessage
 
+  - [x] UpdateMessageContent
+
 - [x] Groups
 
   - [x] CreateGroup
@@ -64,7 +66,7 @@ Getting started
     class EchoBot(ActorBot):
 
         # override base handler for your bot logic
-        def incomming_handler(self, message):
+        async def incomming_handler(self, message):
             # set destination peer a sender
             dest = message.body.peer
 
@@ -72,10 +74,11 @@ Getting started
             out_text = messaging.TextMessage(text=message.body.message.text)
 
             # make sendmessage object
-            out_msg = messaging.SendMessage(self._get_id(), peer=dest, message=out_text)
+            out_msg = messaging.SendMessage(self._get_id(),
+                                            peer=dest, message=out_text)
 
             # send message
-            self.send(out_msg)
+            await self.send(out_msg)
 
     bot = EchoBot(endpoint='ENDPOINT',
                   token='TOKEN',
