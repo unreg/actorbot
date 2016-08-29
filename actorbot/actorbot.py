@@ -47,19 +47,9 @@ class ActorBot(object):
         self._env = Environment()
         self._env.loader = FileSystemLoader('./actorbot/templates')
 
-    def handler(self, message):
-        """
-        """
-        pass
-
-    def _get_id(self):
-        """
-        """
-        self._id += 1
-        return self._id
-
     async def _connect(self):
         """
+        Connect and return aiohttp.ClientWebSocketResponse
         """
         logger.debug('[%s] connect to %s', self._name, self._url)
         return await self._session.ws_connect(self._url)
@@ -73,12 +63,27 @@ class ActorBot(object):
         logger.debug('send: %s', res)
         self._ws.send_str(res)
 
-    def send(self, message):
+    def _get_id(self):
+        """
+        Increment and return outgoing message ID
+        """
+        self._id += 1
+        return self._id
+
+    async def incomming_handler(self, message):
         """
         """
-        text = message.to_str().replace('"type"', '"$type"')
-        logger.debug('send: %s', text)
-        self._ws.send_str(text)
+        logger.info('[%s] received message from ID=%s',
+                    self._name, message.body.sender.id)
+
+    async def listener(self):
+        """
+        """
+        try:
+            self.listener_task = asyncio.ensure_future(self.receive())
+            done, pending = await asyncio.wait([self.listener_task])
+        except Exception as e:
+            logger.error('listener: %s %s', type(e), e)
 
     async def receive(self):
         """
@@ -87,20 +92,47 @@ class ActorBot(object):
             self._ws = await self._connect()
 
         try:
-            res = await asyncio.wait_for(self._ws.receive(),
-                                            timeout=self._keep_alive)
-            if res.tp == aiohttp.MsgType.error:
-                logger.error('[%s] receive: %s', self._name, res.tp.data)
-            elif res.tp == aiohttp.MsgType.closed:
-                logger.debug('[%s] websocket connection closed', self._name)
+            message = await asyncio.wait_for(self._ws.receive(),
+                                             timeout=self._keep_alive)
+            if message.tp == aiohttp.MsgType.error:
+                logger.debug('[%s] websocket connection error: %r',
+                             self._name, message.data)
+            elif message.tp == aiohttp.MsgType.closed:
+                logger.debug('[%s] websocket connection closed',
+                             self._name)
+            elif message.tp == aiohttp.MsgType.text:
+                logger.debug('[%s] websocket connection receive: %r',
+                             self._name, message)
+                incomming = BaseMessage(
+                    json.loads(message.data.replace('$type', 'type')))
+                if incomming.type == 'FatSeqUpdate':
+                    await self.incomming_handler(incomming)
             else:
-                logger.debug('[%s] receive: %s', self._name, res.data)
-                message = BaseMessage(
-                    json.loads(res.data.replace('$type', 'type')))
-                if message.type == 'FatSeqUpdate':
-                    self.handler(message)
+                logger.debug('[%s] unknown message type: %r', message)
+        except asyncio.TimeoutError:
+            logger.debug('[%s] websocket connection idle', self._name)
         except Exception as e:
-            logger.debug('[%s] idle', self._name)
+            logger.debug('[%s] websocket connection any error: %s %s',
+                         self._name, type(e), e)
+
+    async def send(self, message):
+        """
+        Send data to websocket as text message
+        """
+        res = None
+
+        text = message.to_str().replace('"type"', '"$type"')
+        logger.debug('send: %s', text)
+        self._ws.send_str(text)
+
+        try:
+            res = await self._ws.receive()
+            logger.info('[%s] sent message to ID=%s',
+                        self._name, message.body.peer.id)
+        except Exception as e:
+            logger.error('send %s %s', type(e), e)
+
+        return res
 
     async def stop(self):
         """
