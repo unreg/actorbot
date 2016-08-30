@@ -95,7 +95,7 @@ or send any message as a jinja2 template:
     class EchoBot(ActorBot):
 
         # override base handler for your bot logic
-        def handler(self, message):
+        def incomming_handler(self, message):
             data = {
                 'type': 'Request',
                 'id': self._get_id(),

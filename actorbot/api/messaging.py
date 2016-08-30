@@ -27,4 +27,3 @@ class UpdateMessageContent(MessageOut):
                     randomId=randomId,
                     peer=peer, updatedMessage=message)
         super().__init__(message_id, Services.Messaging, body)
-
