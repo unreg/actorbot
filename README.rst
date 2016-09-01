@@ -18,11 +18,12 @@ Features
 API module
 ==========
 
-- [x] Messaging
+============================  ============================
+- [x] Messaging               - [x] Files
 
-  - [x] SendMessage
+  - [x] SendMessage             - [x] UploadFile
 
-  - [x] UpdateMessageContent
+  - [x] UpdateMessageContent    - [x] DownloadFile
 
 - [x] Groups
 
@@ -39,6 +40,7 @@ API module
   - [x] DeleteValue
 
   - [x] GetKeys
+  ============================  ============================
 
 
   more in `Wiki <https://github.com/unreg/actorbot/wiki>`_

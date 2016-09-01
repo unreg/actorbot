@@ -21,6 +21,7 @@
 import json
 import datetime
 import random
+import struct
 from enum import Enum
 
 from actorbot.utils import logger
@@ -33,7 +34,6 @@ def random_id(id):
         datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
         '%03d' % int(id),
         '%02d' % random.randint(0, 100)])
-
 
 
 class Services(Enum):
@@ -95,7 +95,7 @@ class MessageOut(BaseMessage):
     def __init__(self, message_id, service, body, message_type='Request'):
         data = {
             'type': message_type,
-            'id': str(message_id), 
+            'id': str(message_id),
             'service': service.value,
             'body': json.loads(body.to_str())
         }
@@ -112,14 +112,29 @@ class Body(BaseMessage):
                 data[key] = json.loads(val.to_str())
             else:
                 data[key] = val
-        super().__init__(data)        
+        super().__init__(data)
 
 
 class Peer(BaseMessage):
     def __init__(self, peer_type, peer_id, accessHash):
         data = {
             'type': peer_type,
-            'id': str(peer_id), 
+            'id': str(peer_id),
             'accessHash': accessHash
+        }
+        super().__init__(data)
+
+class FileLocation(BaseMessage):
+    def __init__(self, fileId, accessHash):
+        data = {
+            'fileId': str(fileId),
+            'accessHash': accessHash
+        }
+        super().__init__(data)
+
+class FileBytes(BaseMessage):
+    def __init__(self, bytestr):
+        data = {
+            'fileBytes': list(bytestr)
         }
         super().__init__(data)
