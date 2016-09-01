@@ -1,5 +1,4 @@
 from actorbot.api import MessageOut, Services, Body
-from actorbot.api import random_id
 
 from actorbot.utils import logger
 

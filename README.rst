@@ -40,6 +40,25 @@ API module
 
   - [x] GetKeys
 
+- [x] Files
+
+  - [x] UploadFile
+
+  - [x] DownloadFile
+
+- [x] Stickers
+
+  - [x] CreateStickerPack
+
+  - [x] AddSticker
+
+  - [x] ShowStickers
+
+  - [x] DeleteSticker
+
+  - [x] MakeStickerPackDefault
+
+
 
   more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
 
