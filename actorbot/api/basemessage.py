@@ -138,3 +138,13 @@ class FileBytes(BaseMessage):
             'fileBytes': list(bytestr)
         }
         super().__init__(data)
+
+
+class BotCommand(BaseMessage):
+    def __init__(self, slashCommand, description, locKey):
+        data = {
+            'slashCommand': slashCommand,
+            'description': description,
+            'locKey': locKey
+        }
+        super().__init__(data)

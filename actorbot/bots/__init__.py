@@ -19,12 +19,4 @@ def safe_import(module_name, class_name):
         logger.debug("%s", traceback.format_exc())
 
 
-safe_import('.basemessage', 'Services')
-safe_import('.basemessage', 'BaseMessage')
-safe_import('.basemessage', 'MessageOut')
-safe_import('.basemessage', 'Body')
-safe_import('.basemessage', 'Peer')
-safe_import('.basemessage', 'FileLocation')
-safe_import('.basemessage', 'FileBytes')
-safe_import('.basemessage', 'BotCommand')
-safe_import('.basemessage', 'random_id')
+safe_import('.echobot', 'EchoBot')

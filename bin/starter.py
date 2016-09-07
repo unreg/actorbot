@@ -25,35 +25,10 @@ import os
 import signal
 import logging
 
+from actorbot import BotFarm
+from actorbot.bots import EchoBot
+
 from actorbot.utils import logger_init, logger
-
-from actorbot.api import messaging, Peer
-
-from actorbot import ActorBot, BotFarm
-
-
-class EchoBot(ActorBot):
-
-    """
-    """
-
-    async def incomming_handler(self, message):
-        """
-        """
-        await super().incomming_handler(message)
-
-        # set destination peer a sender
-        dest = message.body.peer
-
-        # create echo text message
-        out_text = messaging.TextMessage(text=message.body.message.text)
-
-        # make sendmessage object
-        out_msg = messaging.SendMessage(self._get_id(),
-                                        peer=dest, message=out_text)
-
-        # send message
-        await self.send(out_msg)
 
 
 async def exit(signame):
