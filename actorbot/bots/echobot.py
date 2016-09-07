@@ -21,4 +21,4 @@ class EchoBot(ActorBot):
         out_msg = messaging.SendMessage(self._get_id(),
                                         peer=peer,
                                         message=message.body.message)
-        resp = self.send(out_msg, callback=self._delivered)
+        self.send(out_msg, callback=self._delivered)
