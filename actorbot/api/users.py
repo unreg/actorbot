@@ -52,9 +52,9 @@ class AddSlashCommand(MessageOut):
 
 
 class RemoveSlashCommand(MessageOut):
-    def __init__(self, message_id, userId, command):
+    def __init__(self, message_id, userId, slashCommand):
         body = Body(body_type='RemoveSlashCommand',
-            userId=userId, command=command)
+                    userId=userId, slashCommand=slashCommand)
         super().__init__(message_id, Services.Users, body)
 
 
