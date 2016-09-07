@@ -18,46 +18,19 @@ Features
 API module
 ==========
 
-- [x] Messaging
+- [x] Messaging: SendMessage, UpdateMessageContent
 
-  - [x] SendMessage
+- [x] Groups: CreateGroup, InviteUser
 
-  - [x] UpdateMessageContent
+- [x] KeyValue: SetVAlue, GetValue, DeleteValue, GetKeys
 
-- [x] Groups
+- [x] Files: UploadFile, DownloadFile
 
-  - [x] CreateGroup
+- [x] Stickers: CreateStickerPack, AddSticker, ShowStickers, DeleteSticker, MakeStickerPackDefault
 
-  - [x] InviteUser
+- [x] Bots: CreateBot
 
-- [x] KeyValue
-
-  - [x] SetVAlue
-
-  - [x] GetValue
-
-  - [x] DeleteValue
-
-  - [x] GetKeys
-
-- [x] Files
-
-  - [x] UploadFile
-
-  - [x] DownloadFile
-
-- [x] Stickers
-
-  - [x] CreateStickerPack
-
-  - [x] AddSticker
-
-  - [x] ShowStickers
-
-  - [x] DeleteSticker
-
-  - [x] MakeStickerPackDefault
-
+- [x] Users: FindUser, ChangeUserName, ChangeUserNickname, ChangeUserAbout, ChangeUserAvatar, IsAdmin, AddSlashCommand, RemoveSlashCommand, AddUserExtString, AddUserExtBool, RemoveUserExt
 
 
   more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
