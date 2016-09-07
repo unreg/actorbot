@@ -18,19 +18,19 @@ Features
 API module
 ==========
 
-- [x] Messaging: SendMessage, UpdateMessageContent
+- Messaging: SendMessage, UpdateMessageContent
 
-- [x] Groups: CreateGroup, InviteUser
+- Groups: CreateGroup, InviteUser
 
-- [x] KeyValue: SetVAlue, GetValue, DeleteValue, GetKeys
+- KeyValue: SetVAlue, GetValue, DeleteValue, GetKeys
 
-- [x] Files: UploadFile, DownloadFile
+- Files: UploadFile, DownloadFile
 
-- [x] Stickers: CreateStickerPack, AddSticker, ShowStickers, DeleteSticker, MakeStickerPackDefault
+- Stickers: CreateStickerPack, AddSticker, ShowStickers, DeleteSticker, MakeStickerPackDefault
 
-- [x] Bots: CreateBot
+- Bots: CreateBot
 
-- [x] Users: FindUser, ChangeUserName, ChangeUserNickname, ChangeUserAbout, ChangeUserAvatar, IsAdmin, AddSlashCommand, RemoveSlashCommand, AddUserExtString, AddUserExtBool, RemoveUserExt
+- Users: FindUser, ChangeUserName, ChangeUserNickname, ChangeUserAbout, ChangeUserAvatar, IsAdmin, AddSlashCommand, RemoveSlashCommand, AddUserExtString, AddUserExtBool, RemoveUserExt
 
 
   more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
@@ -41,7 +41,6 @@ Requirements
 
 * Python >= 3.5.1
 * `aiohttp >= 0.22.0 <https://github.com/KeepSafe/aiohttp>`_
-* jinja2
 
 
 Getting started
