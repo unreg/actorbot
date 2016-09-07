@@ -47,7 +47,7 @@ Getting started
 ===============
 
 
-Simple echo bot example
+Simple echo bot example:
 
 .. code-block:: python
 
