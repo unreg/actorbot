@@ -23,11 +23,9 @@ import asyncio
 import aiohttp
 import json
 
-from jinja2 import FileSystemLoader
-from jinja2.environment import Environment
+from actorbot.api import BaseMessage
 
 from actorbot.utils import logger
-from actorbot.api import BaseMessage
 
 
 class ActorBot(object):
@@ -44,24 +42,16 @@ class ActorBot(object):
         self._keep_alive = keep_alive
         self._ws = None
         self._id = 0
-        self._env = Environment()
-        self._env.loader = FileSystemLoader('./actorbot/templates')
+        self._sent = {}
+        self._queue = []
 
-    async def _connect(self):
+    async def _connection(self):
         """
         Connect and return aiohttp.ClientWebSocketResponse
         """
-        logger.debug('[%s] connect to %s', self._name, self._url)
-        return await self._session.ws_connect(self._url)
-
-    def sendTemplate(self, data, template_name):
-        """
-        """
-        template = self._env.get_template(template_name)
-        text = template.render(data)
-        res = ''.join([s.strip() for s in text.split()])
-        logger.debug('send: %s', res)
-        self._ws.send_str(res)
+        if (self._ws is None) or (self._ws.closed):
+            logger.debug('[%s] connect to %s', self._name, self._url)
+            self._ws = await self._session.ws_connect(self._url)
 
     def _get_id(self):
         """
@@ -70,78 +60,92 @@ class ActorBot(object):
         self._id += 1
         return self._id
 
-    async def incomming_handler(self, message):
+    async def message_handler(self, message):
         """
-        Overridden handler for incomming messages
+        Handler for incomming messages
         """
-        logger.info('[%s] received message from ID=%s',
-                    self._name, message.body.sender.id)
+        logger.debug('[%s] message receive: %r',
+                     self._name, message.to_str())
 
-    async def listener(self):
+    async def _response_handler(self, message):
         """
-        Coroutine listens for incoming messages
+        Handler for incomming responses
         """
-        self.listener_task = asyncio.ensure_future(self.receive())
-        done, pending = await asyncio.wait([self.listener_task])
+        logger.debug('[%s] response receive: %r',
+                     self._name, message.to_str())
+        handler = self._sent.pop(message.id, None)
+        if handler is not None:
+            await handler(message)
+        logger.debug('%d non confirmed', len(self._sent))
+
+    def _error_handler(self, message):
+        """
+        Handler for error
+        """
+        logger.debug('[%s] error: %r', self._name, message.data)
+
+    def send(self, message, callback=None):
+        """
+        """
+        text = message.to_str().replace('"type"', '"$type"')
+        self._queue.append(text)
+        self._sent[message.id] = callback
+        logger.debug('send: %s', text)
+
+    async def _route(self, message):
+        """
+        Route incomming message by type
+        """
+        if message.tp == aiohttp.MsgType.text:
+            incomming = BaseMessage(
+                json.loads(message.data.replace('$type', 'type')))
+            if incomming.type == 'FatSeqUpdate':
+                await self.message_handler(incomming)
+            if incomming.type == 'Response':
+                await self._response_handler(incomming)
+        elif message.tp == aiohttp.MsgType.error:
+            self._error_handler(message)
+        else:
+            logger.debug('[%s] unknown message type: %r', self._name, message)
+
+    async def _sending_queue(self):
+        """
+        Return a queue text messages to sending
+        """
+        return self._queue
 
     async def receive(self):
         """
-        Coroutine receive incoming messages
+        Coroutine receive incoming messages and send outgoing
         """
-        if (self._ws is None) or (self._ws.closed):
-            self._ws = await self._connect()
+        await self._connection()
 
-        try:
-            message = await asyncio.wait_for(self._ws.receive(),
-                                             timeout=self._keep_alive)
-            if message.tp == aiohttp.MsgType.error:
-                logger.debug('[%s] websocket connection error: %r',
-                             self._name, message.data)
-            elif message.tp == aiohttp.MsgType.closed:
-                logger.debug('[%s] websocket connection closed',
-                             self._name)
-            elif message.tp == aiohttp.MsgType.text:
-                logger.debug('[%s] websocket connection receive: %r',
-                             self._name, message)
-                incomming = BaseMessage(
-                    json.loads(message.data.replace('$type', 'type')))
-                if incomming.type == 'FatSeqUpdate':
-                    await self.incomming_handler(incomming)
-            else:
-                logger.debug('[%s] unknown message type: %r', self._name, message)
-        except asyncio.TimeoutError:
-            logger.debug('[%s] websocket connection idle', self._name)
-        except Exception as e:
-            logger.debug('[%s] websocket connection any error: %s %s',
-                         self._name, type(e), e)
+        self._listener_task = asyncio.ensure_future(self._ws.receive())
+        self._sender_task = asyncio.ensure_future(self._sending_queue())
 
-    async def send(self, message):
-        """
-        Send data to websocket as text message and receive response
-        """
-        resp = None
+        done, pending = await asyncio.wait(
+            [self._listener_task, self._sender_task],
+            return_when=asyncio.FIRST_COMPLETED)
 
-        text = message.to_str().replace('"type"', '"$type"')
-        logger.debug('send: %s', text)
-        self._ws.send_str(text)
-        try:
-            resp = await asyncio.wait_for(self._ws.receive(),
-                                          timeout=self._keep_alive)
-            logger.debug('[%s] websocket connection receive: %r',
-                         self._name, resp)
-            resp = BaseMessage(json.loads(resp.data.replace('$type', 'type')))
-            logger.info('[%s] sent message ID=%s',
-                        self._name, message.id)
-        except Exception as e:
-            logger.error('send %s %s', type(e), e)
+        if self._listener_task in done:
+            message = self._listener_task.result()
+            await self._route(message)
+        else:
+            self._listener_task.cancel()
 
-
-        if resp.type == 'Response':
-            return resp
+        if self._sender_task in done:
+            messages = self._sender_task.result()
+            while len(messages) > 0:
+                message = messages.pop()
+                self._ws.send_str(message)
+        else:
+            self._sender_task.cancel()
 
     async def stop(self):
         """
         Close websocket connection and session
         """
+        self._listener_task.cancel()
+        self._sender_task.cancel()
         await self._ws.close()
         self._session.close()
