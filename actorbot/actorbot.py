@@ -76,7 +76,7 @@ class ActorBot(object):
         handler = self._sent.pop(message.id, None)
         if handler is not None:
             await handler(message)
-        logger.debug('%d non confirmed', len(self._sent))
+        logger.debug('%d non confirmed messages', len(self._sent))
 
     def _error_handler(self, message):
         """
