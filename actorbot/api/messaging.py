@@ -12,6 +12,21 @@ class TextMessage(BaseMessage):
         }
         super().__init__(data)
 
+class DocumentMessage(BaseMessage):
+    def __init__(self, fileId, accessHash, fileSize,
+        name, mimeType, thumb, ext, message_type="Document"):
+        data = {
+            'type': message_type,
+            'fileId': fileId,
+            'accessHash': accessHash,
+            'fileSize': fileSize,
+            'name': name,
+            'mimeType': mimeType,
+            'thumb': thumb,
+            'ext': ext
+        }
+        super().__init__(data)
+
 
 class SendMessage(MessageOut):
     def __init__(self, message_id, peer, message):

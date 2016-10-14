@@ -9,6 +9,11 @@ class FindUser(MessageOut):
                     query=query)
         super().__init__(message_id, Services.Users, body)
 
+class GetUser(MessageOut):
+    def __init__(self, message_id, userId):
+        body = Body(body_type='GetUserById',
+                    userId=userId)
+        super().__init__(message_id, Services.Users, body)
 
 class ChangeUserName(MessageOut):
     def __init__(self, message_id, userId, name):
