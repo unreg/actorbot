@@ -19,4 +19,5 @@ def safe_import(module_name, class_name):
         logger.debug("%s", traceback.format_exc())
 
 
-safe_import('.echobot', 'EchoBot')
+safe_import('.conversation', 'Conversation')
+safe_import('.echo', 'EchoConv')
