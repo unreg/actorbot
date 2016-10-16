@@ -13,28 +13,25 @@ class Conversation(object):
         Type me [/help](send:/help) for more command.
     '''
 
-    def __init__(self, owner, uid):
+    def __init__(self, owner, peer):
         """
         """
         self._owner = owner
-        self._uid = uid
+        self._peer = peer
         self._id = 0
         self._sent = []
         logger.debug('[%s] start conversation: %s',
-                     self._owner.name, self._uid)
+                     self._owner.name, self._peer.id)
 
     def _get_id(self):
         """
         """
         self._id += 1
-        return '%d%05d' % (self._uid, self._id)
+        return '%d%05d' % (self._peer.id, self._id)
 
     def message_handler(self, message):
         """
         """
-        peer = message.body.peer
-        message = message.body.message
-
         if message.text == '/help':
             self.help(peer)
         if message.text == '/start':
@@ -53,22 +50,22 @@ class Conversation(object):
         logger.debug('[%s] confirmed (%d): %s',
                      self._owner.name, len(self._sent), message.id)
 
-    def sendText(self, peer, text):
+    def sendText(self, text):
         """
         """
         message = messaging.TextMessage(text=text)
         out_msg = messaging.SendMessage(self._get_id(),
-                                        peer=peer,
+                                        peer=self._peer,
                                         message=message)
         self.send(out_msg)
 
-    def help(self, peer):
+    def help(self):
         """
         """
         text = '\n'.join(['[/%s](send:/%s) - %s' % (c[0], c[0], c[1]) for c in self.slashCommands])
-        self.sendText(peer, text)
+        self.sendText(text)
 
-    def start(self, peer):
+    def start(self):
         """
         """
-        self.sendText(peer, self.startText)
+        self.sendText(self.startText)

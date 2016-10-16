@@ -83,10 +83,10 @@ class Bot(object):
             if incomming.type == 'Response':
                 self._conversations[int(incomming.id[:-5])].response_handler(incomming)
             if incomming.type == 'FatSeqUpdate':
-                uid = incomming.body.peer.id
-                if uid not in self._conversations:
-                    self._conversations[uid] = self._conversation(self, uid)
-                self._conversations[uid].message_handler(incomming)
+                peer = incomming.body.peer
+                if peer.id not in self._conversations:
+                    self._conversations[peer.id] = self._conversation(self, peer)
+                self._conversations[peer.id].message_handler(incomming.body.message)
 
         elif message.tp == aiohttp.MsgType.error:
             logger.debug('[%s] error: %r', self._name, message.data)

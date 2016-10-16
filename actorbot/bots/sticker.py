@@ -1,4 +1,7 @@
+from actorbot.api import stickers
+from actorbot.api import keyvalue
 from actorbot.bots import Conversation
+from actorbot.utils import logger
 
 
 class StickerConv(Conversation):
@@ -19,38 +22,78 @@ class StickerConv(Conversation):
     def message_handler(self, message):
         """
         """
-        peer = message.body.peer
-        message = message.body.message
-
         if message.type != 'Text':
             return
         if message.text == '/help':
-            self.help(peer)
+            self.help()
         elif message.text == '/start':
-            self.start(peer)
-        elif self.admins and (peer.id not in self.admins):
+            self.start()
+        elif self.admins and (self._peer.id not in self.admins):
             self.sendText(
-                peer, text='Access denied. Administrator rights are required.')
+                text='Access denied. Administrator rights are required.')
             return
         elif message.text == '/createpack':
-            self.createpack(peer, message)
+            self.createpack(message)
         else:
             if self.command == 'createpack':
-                self.createpack(peer, message)
+                self.createpack(message)
 
-    def createpack(self, peer, message):
+    def response_handler(self, message):
+        """
+        """
+        super().response_handler(message)
+        if message.body is None:
+            return
+        if self.command == 'createpack':
+            self.createpack(message)
+
+    def createpack(self, message):
         """
         """
         if self.command and (self.command != 'createpack'):
-            self.sendText(peer, 'Wrong command')
+            self.sendText('Wrong command')
             return
+        
         if self.stage == 0:
             self.stage = 1
             self.command = 'createpack'
-            self.sendText(peer, text='Enter name for you new stickerpack')
+            self.sendText(text='Enter name for you new stickerpack')
+            logger.debug('[%s] new command: %s:%d',
+                         self._owner.name, self.command, self.stage)
             return
+        
         if self.stage == 1:
             self.stage = 2
-            text = 'You enter: %s' % message.text
-            self.sendText(peer, text=text)
+            self.stickerpackname = message.text
+            out_msg = stickers.CreateStickerPack(self._get_id(),
+                                                 creatorUserId=self._peer.id)
+            self.send(out_msg)
+            logger.debug('[%s] command: %s:%d:%s',
+                         self._owner.name, self.command, self.stage, self.stickerpackname)
             return
+        
+        if self.stage == 2:
+            self.stage = 3
+            #logger.debug(message.body.)
+            self.stickerpackid = message.body.value
+            logger.debug('[%s] new command: %s:%d',
+                         self._owner.name, self.command, self.stage)
+            out_msg = keyvalue.GetValue(self._get_id(),
+                keyspace='stickerbot', key='packs')
+            self.send(out_msg)
+            return
+        
+        if self.stage == 3:
+            self.stage = 4
+            logger.debug('[%s] new command: %s:%d',
+                         self._owner.name, self.command, self.stage)
+            return
+
+        if self.stage == 4:
+            self.stage = 5
+            return
+            #logger.debug('[%s] new command: %s:%d',
+            #             self._owner.name, self.command, self.stage)
+            #out_msg = keyvalue.GetValue(self._get_id(),
+            #    keyspace='stickerbot', key='packs')
+            #self.send(out_msg)
