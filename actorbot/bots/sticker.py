@@ -53,25 +53,26 @@ class StickerConv(Conversation):
         if self.command and (self.command != 'createpack'):
             self.sendText('Wrong command')
             return
-        
+
         if self.stage == 0:
+            logger.debug(self.stage)
             self.stage = 1
             self.command = 'createpack'
             self.sendText(text='Enter name for you new stickerpack')
-            logger.debug('[%s] new command: %s:%d',
-                         self._owner.name, self.command, self.stage)
             return
-        
+
         if self.stage == 1:
+            logger.debug(self.stage)
+            if message.type == 'Response':
+                return
             self.stage = 2
-            self.stickerpackname = message.text
-            out_msg = stickers.CreateStickerPack(self._get_id(),
-                                                 creatorUserId=self._peer.id)
-            self.send(out_msg)
-            logger.debug('[%s] command: %s:%d:%s',
-                         self._owner.name, self.command, self.stage, self.stickerpackname)
+            #self.stickerpackname = message.text
+            #out_msg = stickers.CreateStickerPack(self._get_id(),
+            #                                     creatorUserId=self._peer.id)
+            #self.send(out_msg)
             return
-        
+
+        '''
         if self.stage == 2:
             self.stage = 3
             #logger.debug(message.body.)
@@ -82,7 +83,7 @@ class StickerConv(Conversation):
                 keyspace='stickerbot', key='packs')
             self.send(out_msg)
             return
-        
+
         if self.stage == 3:
             self.stage = 4
             logger.debug('[%s] new command: %s:%d',
@@ -97,3 +98,4 @@ class StickerConv(Conversation):
             #out_msg = keyvalue.GetValue(self._get_id(),
             #    keyspace='stickerbot', key='packs')
             #self.send(out_msg)
+        '''
