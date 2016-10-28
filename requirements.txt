@@ -1,1 +1,2 @@
 aiohttp>=0.22.0
+import async_timeout>=1.1.0

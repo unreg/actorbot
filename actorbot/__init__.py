@@ -19,5 +19,5 @@ def safe_import(module_name, class_name):
         logger.debug("%s", traceback.format_exc())
 
 
-safe_import('.actorbot', 'ActorBot')
+safe_import('.actorbot', 'Bot')
 safe_import('.botfarm', 'BotFarm')

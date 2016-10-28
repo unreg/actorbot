@@ -32,8 +32,7 @@ def random_id(id):
     """
     return ''.join([
         datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
-        '%03d' % int(id),
-        '%02d' % random.randint(0, 100)])
+        '%s' % id[-5:],])
 
 
 class Services(Enum):

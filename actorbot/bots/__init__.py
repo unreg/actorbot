@@ -2,6 +2,7 @@ import traceback
 import importlib
 from actorbot.utils import logger
 
+
 def safe_import(module_name, class_name):
     if type(class_name) is list:
         for name in class_name:
@@ -19,4 +20,6 @@ def safe_import(module_name, class_name):
         logger.debug("%s", traceback.format_exc())
 
 
-safe_import('.echobot', 'EchoBot')
+safe_import('.conversation', 'Conversation')
+# safe_import('.echobot', 'EchoConversation')
+safe_import('.stickerbot', 'StickerConversation')
