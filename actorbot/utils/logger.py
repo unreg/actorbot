@@ -49,7 +49,7 @@ def logger_init(stream_log_level=WARNING, colorized=False):
 
     stream_handler = StreamHandler(sys.stderr)
     formatter = Formatter(
-        '[%(levelname).1s] [%(asctime)s] %(message)s')
+        '[%(levelname).1s] [%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
     if colorized:
         c_formatter = ColorFormatter(

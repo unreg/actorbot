@@ -1,6 +1,8 @@
 from actorbot.api import BaseMessage, MessageOut, Body, Services
 from actorbot.api import random_id
 
+from actorbot.utils import logger
+
 
 class TextMessage(BaseMessage):
     def __init__(self, text, message_type='Text'):
@@ -10,10 +12,9 @@ class TextMessage(BaseMessage):
         }
         super().__init__(data)
 
-
 class DocumentMessage(BaseMessage):
     def __init__(self, fileId, accessHash, fileSize,
-                 name, mimeType, thumb, ext, message_type="Document"):
+        name, mimeType, thumb, ext, message_type="Document"):
         data = {
             'type': message_type,
             'fileId': fileId,
@@ -41,3 +42,4 @@ class UpdateMessageContent(MessageOut):
                     randomId=randomId,
                     peer=peer, updatedMessage=message)
         super().__init__(message_id, Services.Messaging, body)
+

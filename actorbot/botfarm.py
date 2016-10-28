@@ -41,7 +41,7 @@ class BotFarm(Event):
         """
         tasks = []
         for bot in self.bots:
-            tasks.append(asyncio.ensure_future(bot.transport()))
+            tasks.append(asyncio.ensure_future(bot.receive()))
         done, pending = await asyncio.wait(tasks)
 
     async def stop(self):

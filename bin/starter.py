@@ -26,8 +26,7 @@ import signal
 import logging
 
 from actorbot import BotFarm
-from actorbot import Bot
-from actorbot.bots import StickerConversation
+from actorbot.bots import EchoBot
 
 from actorbot.utils import logger_init, logger
 
@@ -42,11 +41,10 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    nbot = Bot(endpoint='ws://api-actor.tmnhy.su:84',
-               token='2095e28107d2ab58d47b793eea510f6f9edd427a',
-               name='stick',
-               conversation=StickerConversation)
-    farm = BotFarm([nbot])
+    echobot = EchoBot(endpoint='ENDPOINT',
+                      token='TOKEN',
+                      name='BOT_NAME')
+    farm = BotFarm([echobot])
 
     loop = asyncio.get_event_loop()
 
