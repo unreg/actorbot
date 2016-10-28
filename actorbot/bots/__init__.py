@@ -21,5 +21,5 @@ def safe_import(module_name, class_name):
 
 
 safe_import('.conversation', 'Conversation')
-# safe_import('.echobot', 'EchoConversation')
+safe_import('.echobot', 'EchoConversation')
 safe_import('.stickerbot', 'StickerConversation')
