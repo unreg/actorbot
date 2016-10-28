@@ -11,7 +11,7 @@ Features
 * simple, small and extensible. It's easy to write own `Actor Messaging <https://github.com/actorapp>`_ bots.
 * pure Python with asyncio and aiohttp
 * websocket connection to Actor ws|wss API-endpoint
-* sending and receiving text messages
+* sending and receiving messages
 * API module
 * `LICENSE <https://github.com/unreg/actorbot/blob/master/LICENSE.txt>`_
 
@@ -33,61 +33,58 @@ API module
 - Users: FindUser, ChangeUserName, ChangeUserNickname, ChangeUserAbout, ChangeUserAvatar, IsAdmin, AddSlashCommand, RemoveSlashCommand, AddUserExtString, AddUserExtBool, RemoveUserExt
 
 
-  more in `Wiki <https://github.com/unreg/actorbot/wiki>`_
-
-
 Requirements
 ============
 
 * Python >= 3.5.1
 * `aiohttp >= 0.22.0 <https://github.com/KeepSafe/aiohttp>`_
+* async_timeout >= 1.1.0 (optional)
 
 
 Getting started
 ===============
 
 
-Simple echo bot example:
+Make your own conversation inherited from base class _Conversation_. For example simple echo bot:
 
 .. code-block:: python
 
-    from actorbot import ActorBot
+    from actorbot.bots import Conversation
     from actorbot.api import messaging
 
-    from actorbot.utils import logger
 
-
-    class EchoBot(ActorBot):
-
-        async def _delivered(self, response):
-            logger.debug('[%s] message id=%s delivered: %s',
-                         self._name, response.id, response.body.date)
-
+    class EchoConversation(Conversation):
+        """
+        Simple echo bot
+        """
         async def message_handler(self, message):
-            await super().message_handler(message)
+            """ """
             out_msg = messaging.SendMessage(self._get_id(),
-                                            peer=message.body.peer,
-                                            message=message.body.message)
-            self.send(out_msg, callback=self._delivered)
+                                            peer=self._peer,
+                                            message=message)
+            self.send(out_msg)
+
+        async def response_handler(self, message):
+            """ """
+            await super().response_handler(message)
 
 
-run EchoBot in farm:
+run new bot in farm with own conversation:
 
 .. code-block:: python
 
-    import asyncio
-
     from actorbot import BotFarm
-    from actorbot.bots import EchoBot
+    from actorbot import Bot
+    from actorbot.bots import EchoConversation
 
+    ...
 
-    echobot = EchoBot(endpoint='ENDPOINT',
-                      token='TOKEN',
-                      name='BOT_NAME')
-    farm = BotFarm([echobot])
+    newbot = Bot(endpoint='YOUR_ACTOR_SERVER_ENDPOINT',
+                 token='YOUR_BOT_TOKEN',
+                 name='SOME_BOT_NAME',
+                 conversation=EchoConversation)
+    farm = BotFarm([newbot])
+    loop.run_until_complete(asyncio.wait([farm.run()]))
 
-    loop = asyncio.get_event_loop()
-    try:
-        loop.run_until_complete(asyncio.wait([farm.run()]))
-    finally:
-        loop.close()
+    ...
+    
