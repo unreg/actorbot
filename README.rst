@@ -45,7 +45,7 @@ Getting started
 ===============
 
 
-Make your own conversation inherited from base class _Conversation_. For example simple echo bot:
+Make your own conversation inherited from base class *Conversation*. For example simple echo bot:
 
 .. code-block:: python
 
