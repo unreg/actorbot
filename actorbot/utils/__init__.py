@@ -22,3 +22,4 @@ def safe_import(module_name, class_name):
 safe_import('.logger', 'logger')
 safe_import('.logger', 'logger_init')
 safe_import('.event', 'Event')
+safe_import('.misc', 'print_date')
