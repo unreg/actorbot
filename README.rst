@@ -88,3 +88,7 @@ run new bot in farm with own conversation:
 
     ...
     
+Feedback
+--------
+
+Join in Actor group https://actor.im/join/pyactorbot
