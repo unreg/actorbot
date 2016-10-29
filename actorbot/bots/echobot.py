@@ -1,24 +1,18 @@
-import asyncio
-
-from actorbot import ActorBot
+from actorbot.bots import Conversation
 from actorbot.api import messaging
 
-from actorbot.utils import logger
 
-
-class EchoBot(ActorBot):
+class EchoConversation(Conversation):
     """
+        Simple echo bot
     """
-    async def _delivered(self, response):
-        """
-        """
-        logger.debug('[%s] message id=%s delivered: %s',
-                     self._name, response.id, response.body.date)
-
     async def message_handler(self, message):
-        await super().message_handler(message)
-        peer = message.body.peer
+        """ """
         out_msg = messaging.SendMessage(self._get_id(),
-                                        peer=peer,
-                                        message=message.body.message)
-        self.send(out_msg, callback=self._delivered)
+                                        peer=self._peer,
+                                        message=message)
+        self.send(out_msg)
+
+    async def response_handler(self, message):
+        """ """
+        await super().response_handler(message)

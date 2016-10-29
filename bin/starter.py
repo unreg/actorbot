@@ -26,7 +26,8 @@ import signal
 import logging
 
 from actorbot import BotFarm
-from actorbot.bots import EchoBot
+from actorbot import Bot
+from actorbot.bots import EchoConversation
 
 from actorbot.utils import logger_init, logger
 
@@ -41,10 +42,11 @@ async def exit(signame):
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    echobot = EchoBot(endpoint='ENDPOINT',
-                      token='TOKEN',
-                      name='BOT_NAME')
-    farm = BotFarm([echobot])
+    newbot = Bot(endpoint='',
+                 token='',
+                 name='',
+                 conversation=EchoConversation)
+    farm = BotFarm([newbot])
 
     loop = asyncio.get_event_loop()
 
