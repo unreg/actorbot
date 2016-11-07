@@ -59,7 +59,7 @@ class StickerConversation(Conversation):
                     '',
                     ('*N.B.* For make sticker pack as default'
                     'you must have administrator permission.')])
-                self.sendText(text)
+                await self.sendText(text)
                 self.error = True
             else:
                 stage = 'run'
@@ -86,8 +86,8 @@ class StickerConversation(Conversation):
                 await self.loadStickerPack(packId=message.body.value)
             else:
                 self.error = True
-                self.sendText('Internal error: error create pack.')
-        
+                await self.sendText('Internal error: error create pack.')
+
         if substage == 4:
             if message.body.date:
                 self.stage = (stage, substage + 1)
@@ -129,7 +129,7 @@ class StickerConversation(Conversation):
                 logger.error('Error download: %s %s', type(e), e)
                 text = 'Failed download %s' % url
                 self.error = True
-            self.sendText(text)
+            await self.sendText(text)
 
         # unpack stickers
         elif substage == 1:
@@ -146,27 +146,27 @@ class StickerConversation(Conversation):
                     else:
                         text = 'Stickers not found.' % (len(self.names))
                         self.error = True
-                    self.sendText(text)
+                    await self.sendText(text)
             except Exception as e:
                 logger.error('Error unzip pack: %s %s', type(e), e)
                 text = 'Unpack error. Try once more.'
                 self.error = True
-                self.sendText(text)
+                await self.sendText(text)
 
         # create pack
         elif substage == 2:
             out_msg =  stickers.CreateStickerPack(self._get_id(),
                                                   creatorUserId=self._peer.id)
-            self.send(out_msg)
+            await self.send(out_msg)
 
         # set packId
         elif substage == 3:
             self.packId = kwargs.get('packId')
             text = ' '.join([
                 'Create pack: %s.' % self.packId,
-                ' Uploading stickers on server. Please wait...' 
+                ' Uploading stickers on server. Please wait...'
             ])
-            self.sendText(text)
+            await self.sendText(text)
 
         # upload stickers to server
         elif substage == 4:
@@ -186,21 +186,21 @@ class StickerConversation(Conversation):
                             small=list(image128), smallW=128, smallH=128,
                             medium=list(image256), mediumW=256, mediumH=256,
                             large=list(image512), largeW=512, largeH=512)
-                        self.send(out_msg)
+                        await self.send(out_msg)
                     else:
-                        self.sendText('All stickers uploaded.')
+                        await self.sendText('All stickers uploaded.')
             except Exception as e:
                 logger.error('Error unzip sticker: %s %s', type(e), e)
                 text = 'Upload sticker error. Try once more.'
                 self.error = True
-                self.sendText(text)
+                await self.sendText(text)
 
         # set pack as default
         elif substage == 5:
             out_msg = stickers.MakeStickerPackDefault(self._get_id(),
                                                       userId=self._peer.id,
                                                       packId=self.packId)
-            self.send(out_msg)
+            await self.send(out_msg)
 
         # end of operation
         elif substage == 6:
@@ -209,4 +209,4 @@ class StickerConversation(Conversation):
                 text = 'Error make pack as defaut: %s. Operation end.' % code
             else:
                 text = 'Pack %s made default. Operation end.' % self.packId
-            self.sendText(text)
+            await self.sendText(text)

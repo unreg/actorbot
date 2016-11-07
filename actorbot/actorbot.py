@@ -41,7 +41,7 @@ class Bot(object):
         self._session = aiohttp.ClientSession()
         self._socket = None
 
-        self._queue = []
+        self._queue = asyncio.Queue()
         self._conversations = {}
 
     @property
@@ -63,17 +63,17 @@ class Bot(object):
 
     async def _sendingQueue(self):
         """
-        Return list of messages ready for sending 
+        Return message ready for sending
         """
-        return self._queue
+        return await self._queue.get()
 
-    def toSend(self, message):
+    async def toSend(self, message):
         """
         Append message in queue to sending
         """
         text = message.to_str().replace('"type"', '"$type"')
         logger.debug('[%s] send %s', self._name, text)
-        self._queue.append(text)
+        await self._queue.put(text)
 
     async def transport(self):
         """
@@ -94,10 +94,7 @@ class Bot(object):
             listener_task.cancel()
 
         if sender_task in done:
-            queue = sender_task.result()
-            while len(queue) > 0:
-                message = queue.pop()
-                self._socket.send_str(message)
+            self._socket.send_str(sender_task.result())
         else:
             sender_task.cancel()
 

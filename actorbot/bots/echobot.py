@@ -11,7 +11,7 @@ class EchoConversation(Conversation):
         out_msg = messaging.SendMessage(self._get_id(),
                                         peer=self._peer,
                                         message=message)
-        self.send(out_msg)
+        await self.send(out_msg)
 
     async def response_handler(self, message):
         """ """
