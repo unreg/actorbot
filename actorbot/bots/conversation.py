@@ -36,15 +36,23 @@ class Conversation(object):
         Type me [/help](send:/help) for more command.
     '''
 
-    def __init__(self, owner, peer):
+    def __init__(self, owner, peer, outgoing, **kwargs):
         """
         """
         self._owner = owner
         self._peer = peer
+        self._outgoing = outgoing
+        self._kwargs = kwargs
         self._id = 0
         self._sent = []
+        self._initialization(kwargs)
         logger.debug('[%s] start conversation: %s',
                      self._owner.name, self._peer.id)
+
+    def _initialization(self, kwargs):
+        """
+        """
+        pass
 
     def _get_id(self):
         """
@@ -67,7 +75,8 @@ class Conversation(object):
         Send any message
         """
         self._sent.append(message.id)
-        await self._owner.toSend(message)
+        text = message.to_str().replace('"type"', '"$type"')
+        await self._outgoing.put(text)
 
     async def response_handler(self, message):
         """
