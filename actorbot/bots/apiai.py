@@ -4,8 +4,9 @@ import async_timeout
 import json
 import uuid
 
-from actorbot.bots import Conversation
 from actorbot.api import messaging
+from actorbot.bots import Conversation
+from actorbot.utils import logger
 
 
 class ApiAi(object):
@@ -53,9 +54,7 @@ class ApiAiConversation(Conversation):
 
     async def message_handler(self, message):
         """ """
-        # await self.sendText(await self._apiai.answer(message.text))
-        await asyncio.sleep(20)
-        await self.sendText('Проснулся')
+        await self.sendText(await self._apiai.answer(message.text))
 
     async def response_handler(self, message):
         """ """
