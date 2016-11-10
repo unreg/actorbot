@@ -27,6 +27,7 @@ import logging
 
 from actorbot import Bot
 from actorbot.bots import EchoConversation
+
 from actorbot.utils import logger_init, logger
 
 
@@ -46,10 +47,10 @@ if __name__ == '__main__':
 
     loop = asyncio.get_event_loop()
 
-    echobot = Bot(endpoint='wss://ws-api-actor.tmnhy.su',
-                  token='5bf5860cd6b76749f508185f64369fabd02c647f',
-                  name='apiai',
-                  conversation=EchoConversation)
+    echobot = Bot(endpoint='',
+                  token='',
+                   name='',
+                   conversation=EchoConversation)
 
     bots = [echobot]
     transports = [asyncio.ensure_future(bot.transport.run()) for bot in bots]
