@@ -36,15 +36,23 @@ class Conversation(object):
         Type me [/help](send:/help) for more command.
     '''
 
-    def __init__(self, owner, peer):
+    def __init__(self, owner, peer, outgoing, **kwargs):
         """
         """
         self._owner = owner
         self._peer = peer
+        self._outgoing = outgoing
+        self._kwargs = kwargs
         self._id = 0
         self._sent = []
+        self._initialization(kwargs)
         logger.debug('[%s] start conversation: %s',
                      self._owner.name, self._peer.id)
+
+    def _initialization(self, kwargs):
+        """
+        """
+        pass
 
     def _get_id(self):
         """
@@ -62,12 +70,13 @@ class Conversation(object):
         if message.text == '/start':
             self.start(peer)
 
-    def send(self, message):
+    async def send(self, message):
         """
         Send any message
         """
         self._sent.append(message.id)
-        self._owner.toSend(message)
+        text = message.to_str().replace('"type"', '"$type"')
+        await self._outgoing.put(text)
 
     async def response_handler(self, message):
         """
@@ -77,7 +86,7 @@ class Conversation(object):
         logger.debug('[%s] confirmed (%d): %s',
                      self._owner.name, len(self._sent), message.id)
 
-    def sendText(self, text):
+    async def sendText(self, text):
         """
         Just send some text to peer
         """
@@ -85,17 +94,17 @@ class Conversation(object):
         out_msg = messaging.SendMessage(self._get_id(),
                                         peer=self._peer,
                                         message=message)
-        self.send(out_msg)
+        await self.send(out_msg)
 
-    def help(self):
+    async def help(self):
         """
         Send help text
         """
         text = '\n'.join(['[/%s](send:/%s) - %s' % (c[0], c[0], c[1]) for c in self.slashCommands])
-        self.sendText(text)
+        await self.sendText(text)
 
-    def start(self):
+    async def start(self):
         """
         Send start text
         """
-        self.sendText(self.startText)
+        await self.sendText(self.startText)

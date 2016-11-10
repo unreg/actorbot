@@ -25,38 +25,43 @@ import os
 import signal
 import logging
 
-from actorbot import BotFarm
 from actorbot import Bot
 from actorbot.bots import EchoConversation
 
 from actorbot.utils import logger_init, logger
 
 
-async def exit(signame):
+def exit(signame):
     """
     """
     logger.info('waiting for shutdown asyncio tasks')
-    await farm.stop()
+    loop.remove_signal_handler(signal.SIGTERM)
+    loop.remove_signal_handler(signal.SIGINT)
+    for bot in bots:
+        bot.transport.stop()
+        bot.stop()
 
 
 if __name__ == '__main__':
     logger_init(stream_log_level=logging.DEBUG)
 
-    newbot = Bot(endpoint='',
-                 token='',
-                 name='',
-                 conversation=EchoConversation)
-    farm = BotFarm([newbot])
-
     loop = asyncio.get_event_loop()
+
+    echobot = Bot(endpoint='',
+                  token='',
+                   name='',
+                   conversation=EchoConversation)
+
+    bots = [echobot]
+    transports = [asyncio.ensure_future(bot.transport.run()) for bot in bots]
+    processors = [asyncio.ensure_future(bot.run()) for bot in bots]
 
     for signame in ('SIGINT', 'SIGTERM'):
         loop.add_signal_handler(
-            getattr(signal, signame),
-            lambda: asyncio.async(exit(signame)))
+            getattr(signal, signame), functools.partial(exit, signame))
     logger.info('Bot farm running forever, press Ctrl+C to interrupt.')
 
     try:
-        loop.run_until_complete(asyncio.wait([farm.run()]))
+        loop.run_until_complete(asyncio.wait(transports + processors))
     finally:
         loop.close()
