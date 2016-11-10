@@ -20,4 +20,3 @@ def safe_import(module_name, class_name):
 
 
 safe_import('.actorbot', 'Bot')
-safe_import('.botfarm', 'BotFarm')
