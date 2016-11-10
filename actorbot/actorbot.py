@@ -1,3 +1,23 @@
+#Copyright (c) 2016 Vladimir Vorobev.
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
+
 import aiohttp
 import asyncio
 import json
@@ -8,6 +28,7 @@ from actorbot.utils import logger, Event
 
 class WsTransport(Event):
     """
+        Actor bot Websocket transport
     """
     def __init__(self, endpoint, token, name, incomming, outgoing,
                  loop=None, sleep_time=0.1):
@@ -32,6 +53,7 @@ class WsTransport(Event):
     @property
     def name(self):
         """
+            Return bot name
         """
         return self._name
 
@@ -41,6 +63,9 @@ class WsTransport(Event):
         return '%s/v1/bots/%s' % (endpoint, token)
 
     async def _connection(self):
+        """
+            Make wesocket connection
+        """
         if self._ws is None:
             self._session = aiohttp.ClientSession(loop=self._loop)
             try:
@@ -59,6 +84,7 @@ class WsTransport(Event):
 
     async def process(self):
         """
+            Processing websocket messages
         """
         logger.debug('[%s] [transport] wait', self.name)
         try:
@@ -90,6 +116,7 @@ class WsTransport(Event):
 
     async def run(self):
         """
+            After run stopping coroutines and closed soclet and session
         """
         await super().run()
 
@@ -105,6 +132,7 @@ class WsTransport(Event):
 
     def stop(self):
         """
+            Stop porcessing
         """
         super().stop()
         self._outgoing.put_nowait('close')
@@ -112,12 +140,11 @@ class WsTransport(Event):
 
 class Bot(Event):
     """
+        Actor bot
     """
-
     def __init__(self, endpoint, token, name, conversation,
                  loop=None, sleep_time=0.1, params={}):
-        """
-        """
+        """ """
         super().__init__(interval=sleep_time)
 
         self._name = name
@@ -143,17 +170,20 @@ class Bot(Event):
     @property
     def name(self):
         """
+            Retutn bot name
         """
         return self._name
 
     @property
     def transport(self):
         """
+            Return websocket transport
         """
         return self._transport
 
     async def process(self):
         """
+            Processing incomming messages
         """
         try:
             logger.debug('[%s] [processor] processor wait', self.name)
@@ -181,6 +211,7 @@ class Bot(Event):
 
     def stop(self):
         """
+            Stop processing
         """
         super().stop()
         self._incomming.put_nowait('close')
