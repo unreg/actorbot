@@ -191,7 +191,8 @@ class Bot(Event):
             if str(message) == 'close':
                 return
             if message.tp == aiohttp.MsgType.text:
-                logger.debug('[%s] [processor] incomming message: %r', self.name, message.data)
+                logger.debug('[%s] [processor] incomming message: %r',
+                             self.name, message.data)
                 incomming = BaseMessage(
                     json.loads(message.data.replace('$type', 'type')))
                 if incomming.type == 'Response':
@@ -205,6 +206,9 @@ class Bot(Event):
                     asyncio.ensure_future(
                         self._conversations[peer.id].message_handler(
                             incomming.body.message))
+            if message.tp in (aiohttp.MsgType.close, aiohttp.MsgType.error):
+                logger.error('[%s] [processor] websocket error: data: %r, extra: %r',
+                             self.name, message.data, message.extra)
         except Exception as e:
             logger.error('[%s] [processor] error: %s %s',
                          self.name, type(e), e)
