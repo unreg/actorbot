@@ -26,7 +26,7 @@ API module
 
 - Files: UploadFile, DownloadFile
 
-- Stickers: CreateStickerPack, AddSticker, ShowStickers, DeleteSticker, MakeStickerPackDefault
+- Stickers: CreateStickerPack, AddSticker, ShowStickerPacks, ShowStickers, DeleteSticker, MakeStickerPackDefault, UnmakeStickerPackDefault,
 
 - Bots: CreateBot
 
