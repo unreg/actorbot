@@ -32,6 +32,7 @@ API module
 
 - Users: FindUser, ChangeUserName, ChangeUserNickname, ChangeUserAbout, ChangeUserAvatar, IsAdmin, AddSlashCommand, RemoveSlashCommand, AddUserExtString, AddUserExtBool, RemoveUserExt
 
+- WebHooks: RegisterHook, GetHooks
 
 Requirements
 ============
