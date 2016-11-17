@@ -108,7 +108,7 @@ class WsTransport(Event):
                 if str(message) == 'close':
                     return
                 self._ws.send_str(message)
-                logger.debug('[%s] [transport] sending', self.name)
+                logger.debug('[%s] [transport] sending: %r', self.name, message)
             else:
                 self.sender_task.cancel()
         except Exception as e:

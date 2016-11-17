@@ -89,6 +89,11 @@ class BaseMessage(object):
         """
         return json.dumps(self._data).replace('\"', '"')
 
+    @property
+    def data(self):
+        """ """
+        return self._data
+
 
 class MessageOut(BaseMessage):
     def __init__(self, message_id, service, body, message_type='Request'):
@@ -103,7 +108,7 @@ class MessageOut(BaseMessage):
 
 class Body(BaseMessage):
     def __init__(self, body_type, **kwargs):
-        data ={
+        data = {
             'type': body_type
         }
         for key, val in kwargs.items():
