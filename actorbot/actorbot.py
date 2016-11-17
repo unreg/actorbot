@@ -21,6 +21,7 @@
 import aiohttp
 import asyncio
 import json
+import base64
 
 from actorbot.api import BaseMessage
 from actorbot.utils import logger, Event
@@ -181,6 +182,13 @@ class Bot(Event):
         """
         return self._transport
 
+    def webhooks_handler(self, data64):
+        """ Processing webhook data """
+        data = BaseMessage(
+            json.loads(base64.b64decode(data64['data']).decode()))
+        logger.debug('[%s] [processor] webhook message: %r',
+                     self.name, data.data)
+
     async def process(self):
         """
             Processing incomming messages
@@ -200,12 +208,15 @@ class Bot(Event):
                         self._conversations[int(incomming.id[:-5])].response_handler(incomming))
                 if incomming.type == 'FatSeqUpdate':
                     peer = incomming.body.peer
-                    if peer.id not in self._conversations:
-                        self._conversations[peer.id] = self._conversation(
-                            self, peer, self._outgoing, **self._params)
-                    asyncio.ensure_future(
-                        self._conversations[peer.id].message_handler(
-                            incomming.body.message))
+                    if peer:
+                        if peer.id not in self._conversations:
+                            self._conversations[peer.id] = self._conversation(
+                                self, peer, self._outgoing, **self._params)
+                        asyncio.ensure_future(
+                            self._conversations[peer.id].message_handler(
+                                incomming.body.message))
+                    if 'HookData' in incomming.body.type:
+                        self.webhooks_handler(incomming.body.data)
             if message.tp in (aiohttp.MsgType.close, aiohttp.MsgType.error):
                 logger.error('[%s] [processor] websocket error: data: %r, extra: %r',
                              self.name, message.data, message.extra)
