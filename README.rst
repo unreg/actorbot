@@ -20,7 +20,7 @@ API module
 
 - Messaging: SendMessage, UpdateMessageContent
 
-- Groups: CreateGroup, InviteUser
+- Groups: CreateGroup, CreateGroupWithOwner, UpdateShortName, AddGroupExtString, AddGroupExtBool, RemoveExt, InviteUser
 
 - KeyValue: SetVAlue, GetValue, DeleteValue, GetKeys
 
