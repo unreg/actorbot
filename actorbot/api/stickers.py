@@ -29,6 +29,19 @@ class MakeStickerPackDefault(MessageOut):
         super().__init__(message_id, Services.Stickers, body)
 
 
+class UnmakeStickerPackDefault(MessageOut):
+    def __init__(self, message_id, userId, packId):
+        body = Body(body_type='UnmakeStickerPackDefault',
+                    userId=userId, packId=packId)
+        super().__init__(message_id, Services.Stickers, body)
+
+
+class ShowStickerPacks(MessageOut):
+    def __init__(self, message_id, ownerUserId):
+        body = Body(body_type='ShowStickerPacks', ownerUserId=ownerUserId)
+        super().__init__(message_id, Services.Stickers, body)
+
+
 class ShowStickers(MessageOut):
     def __init__(self, message_id, ownerUserId, packId):
         body = Body(body_type='ShowStickers',
