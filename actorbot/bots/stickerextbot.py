@@ -102,27 +102,6 @@ class StickerExtConversation(Conversation):
                     ownerUserId=self._peer.id, packId=params)
                 await self.send(out_msg)
 
-        if stage == 'viewsticker':
-            # receive /viewsticker
-            if substage == 0:
-                await self.sendText('give me sticker ID')
-
-            # receive sticker ID
-            if substage == 1:
-                sticker_msg = BaseMessage(
-                    {
-                        'type': 'Sticker',
-                        'stickerId': [params],
-                        'stickerCollectionId': [],
-                        'stickerCollectionAccessHash': [],
-                        'image256': IMAGE_256,
-                        'image512': IMAGE_512
-                    }
-                )
-                out_msg = messaging.SendMessage(self._get_id(),
-                    peer=self._peer, message=sticker_msg)
-                await self.send(out_msg)
-
         if stage == 'deletesticker':
             # receive /deleteticker
             if substage == 0:
