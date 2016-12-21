@@ -92,4 +92,4 @@ run one or more bots through starter:
 Feedback
 --------
 
-https://gitter.im/pyactorbot/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link
+https://gitter.im/pyactorbot/Lobby/~chat#share
