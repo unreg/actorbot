@@ -92,4 +92,4 @@ run one or more bots through starter:
 Feedback
 --------
 
-Join in Actor group https://actor.im/join/pyactorbot
+https://gitter.im/pyactorbot/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link
